@@ -78,6 +78,12 @@ void renderDesign (float percent) {
   /* center top darker purple gray gear */
   gear(95, 78, 90, 400, 120, 60, 70, 15, 20, -(float) nFramesInLoop);
   
+  /* light purple right behind large pink */
+  gear(115, 98, 110, 700, 120, 40, 60, 14, 20, (float) nFramesInLoop);
+  
+  /* right top bottom light pink */
+  gear(179,129,132, 820, 230, 50, 60, 10, 10, -(float) nFramesInLoop);
+  
   /* right large pink */
   gear(159, 109, 112, 800, 150, 100, 110, 20, 40, (float) nFramesInLoop);
   
