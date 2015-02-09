@@ -1,4 +1,4 @@
-int nFramesInLoop = 10; //Change to 10 for lenticular
+int nFramesInLoop = 30; //Change to 10 for lenticular
 int nElapsedFrames;
 boolean bRecording;
 
@@ -6,6 +6,85 @@ boolean bRecording;
 int currentFrame;
 int moonTranslate;
 int moonStep;
+
+class CloudParticle {
+  
+  int x;
+  int y;
+  int size;
+  int c1;
+  int c2;
+  int c3;
+  
+  CloudParticle(int x, int y, int size, int c1, int c2, int c3) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.c1 = c1;
+    this.c2 = c2;
+    this.c3 = c3;
+  }
+  
+  public void draw() {
+    fill(c1, c2, c3, 200);
+    ellipse(x, y, size, size);
+  }
+  
+}
+
+
+class Cloud {
+  
+  int centerX;
+  int centerY;
+  int numParticles;
+  int xOffset;
+  int yOffset;
+  int force;
+  public CloudParticle[] particles; 
+  int c1;
+  int c2;
+  int c3;
+  
+  Cloud(int centerX, int centerY, int numParticles, int xOffset, int yOffset, int force,
+    int c1, int c2, int c3) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.numParticles = numParticles;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
+    this.force = force;
+    this.c1 = c1;
+    this.c2 = c2;
+    this.c3 = c3;
+    
+    particles = new CloudParticle[numParticles];
+    
+    for(int i = 0; i < numParticles; i ++) {
+      int xPos = (int)random(centerX - xOffset, centerX + xOffset);
+      int yPos = (int)random(centerY - yOffset, centerY + yOffset);
+      int size = (int)random(30,60);
+      
+      int newc1 = c1 + i * 5;
+      int newc2 = c2 + i * 5;
+      int newc3 = c3 + i * 5;
+      
+      CloudParticle cp = new CloudParticle(xPos, yPos, size, newc1, newc2, newc3);
+      particles[i] = cp;
+    }
+    
+  }
+  
+  public void draw() {
+    for(int i = 0; i < numParticles; i++) {
+      particles[i].draw();
+    }
+  }
+  
+}
+
+Cloud c1;
+
 
 void setup() {
   size(1000,1000);
@@ -15,6 +94,9 @@ void setup() {
   currentFrame = 0;
   moonTranslate = 540;
   moonStep = 2;
+  
+  c1 = new Cloud(400, 500, 30, 60, 30, 1, 115, 98, 110);
+  
 }
 
 void keyPressed() {
@@ -72,13 +154,35 @@ void renderDesign (float percent) {
   fill(115,98,110);
   rect(200,120,700,25);
   
+  c1.draw();
+  
   hangingStar(150, 350, 20, 40, 220, -percent);
   hangingStar(400, 420, 20, 40, 300, percent);
   hangingStar(700, 350, 20, 40, 250, -percent);
   
   moon();
   
+  //cloud(420, 500);
+  
   allGears(percent);
+}
+
+/*
+void cloud(int x, int y) {
+  int cloudSize = 10;
+  for(int i = 0; i < cloudSize; i++) {
+    //float r1 = random(0,50);
+    //float r2 = random(0,50);
+    int test = i*10;
+    fill(115 + test, 98 + test, 110 + test);
+    ellipse(x+r1, y+r2, 50, 50);
+    //ellipse(500 + test, 600 + test, 20, 20);
+  }
+}*/
+
+void animateCloud(Cloud c) {
+  CloudParticle[] cp = c.particles;
+  
 }
 
 void moon() {
@@ -88,7 +192,7 @@ void moon() {
   rect(600, 120, 5, 200);
   
   fill(240, 180, 158);
-  ellipse(580, 320, 70, 70);
+  ellipse(580, 320, 90, 90);
   
   pushMatrix();
   fill(65, 62, 74);
@@ -105,7 +209,7 @@ void moon() {
   
  // print(changeMoon);
   //translate(moonTranslate + changeMoon*2*frameCount,320);
-  ellipse(0, 0, 70, 70);
+  ellipse(0, 0, 90, 90);
   popMatrix();
 }
 
