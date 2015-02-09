@@ -2,11 +2,15 @@ int nFramesInLoop = 30; //Change to 10 for lenticular
 int nElapsedFrames;
 boolean bRecording;
 
+//The current frame we're on
+int currentFrame;
+
 void setup() {
-  size(800,800);
+  size(1000,1000);
   bRecording = false;
   nElapsedFrames = 0;
   frameRate (nFramesInLoop);
+  currentFrame = 0;
 }
 
 void keyPressed() {
@@ -42,17 +46,41 @@ void draw() {
   
 }
 
+//Create the design
 void renderDesign (float percent) {
   noStroke();
   background(65, 62, 74);
+
+  wheel(300, 150, 159, 109, 112, 200, 170, 100, 8, percent, 14);
   
   fill(115,98,110);
+  rect(200,120,700,25);
+  
+  /*Lefttop large pink ultraspiky */
+  gear(179, 129, 132, 200, 200, 90, 100, 20, 40);
+  
+  
+   /*Left small spiky gear*/
+  fill(115,98,110);
   pushMatrix();
-  translate(width*0.2, height*0.5);
-  rotate(frameCount / 200.0);
+  translate(width*0.15, height*0.15);
+  rotate(frameCount / (float)nFramesInLoop);
   star(0,0, 50, 70, 10);
   popMatrix();
 }
+
+void gear(int c1, int c2, int c3, int x, int y, float radius1, float radius2, int nPoints,
+  int centerRadius) {
+  pushMatrix();
+  translate(x, y);
+  rotate(frameCount / (float)nFramesInLoop);
+  fill(c1,c2,c3);
+  star(0,0, radius1, radius2, nPoints);
+  fill(65,62,74);
+  ellipse(0,0,centerRadius, centerRadius);
+  popMatrix();
+}
+
 
 /* Using star function from default examples */
 void star(float x, float y, float radius1, float radius2, int npoints) {
@@ -68,5 +96,29 @@ void star(float x, float y, float radius1, float radius2, int npoints) {
     vertex(sx, sy);
   }
   endShape(CLOSE);
+}
+
+//Make a wheel, specifying color, radius, and number of 
+void wheel(int x, int y, int c1, int c2, int c3, int outerRadius, int innerRadius, 
+  int spokeRadius, int numSpokes, float percent, int weight) {
+  /*Wheel*/
+  fill(c1,c2,c3);
+  ellipse(x, y, outerRadius, outerRadius);
+  fill(65, 62, 74);
+  ellipse(x, y, innerRadius, innerRadius);
+  
+  //Using Golan's sample code
+  float radius = spokeRadius; 
+  for (int i=0; i < numSpokes; i++) {
+    float armAngle = (percent + i) * (TWO_PI/numSpokes); 
+    float px = x + radius*cos(armAngle); 
+    float py = y + radius*sin(armAngle); 
+    //fill    (255); 
+    stroke(159,109,112);
+    strokeWeight(weight);
+    line    (x, y, px, py); 
+    noStroke();
+    //ellipse (px, py, 20, 20);
+  }
 }
 
