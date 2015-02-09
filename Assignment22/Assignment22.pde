@@ -17,8 +17,6 @@ class CloudParticle {
   int c3;
   float xRand;
   float yRand;
-  float xOrig;
-  float yOrig;
   int movement;
   
   CloudParticle(int x, int y, int size, int c1, int c2, int c3) {
@@ -28,11 +26,9 @@ class CloudParticle {
     this.c1 = c1;
     this.c2 = c2;
     this.c3 = c3;
-    this.xOrig = x;
-    this.yOrig = y;
     
-    xRand = random(-20, 20);
-    yRand = random(-20, 20);
+    xRand = random(-1, 1);
+    yRand = random(-1, 1);
     movement = 1;
   }
   
@@ -106,7 +102,7 @@ void setup() {
   moonTranslate = 540;
   moonStep = 2;
   
-  c1 = new Cloud(400, 500, 1, 60, 30, 1, 115, 98, 110);
+  c1 = new Cloud(200, 500, 40, 60, 30, 1, 115, 98, 110);
   
 }
 
@@ -184,9 +180,13 @@ void animateCloud(Cloud c, float percent) {
     
     float newPosX;
     float newPosY;
+    
+    if(frameCount%nFramesInLoop == 0) {
+      cp[i].movement *= -1;
+    }
 
-    newPosX = cp[i].xRand * percent;
-    newPosY = cp[i].yRand * percent;
+    newPosX = cp[i].xRand * percent * cp[i].movement;
+    newPosY = cp[i].yRand * percent * cp[i].movement;
 
     
     cp[i].x = cp[i].x + newPosX;
