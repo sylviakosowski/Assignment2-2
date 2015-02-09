@@ -76,7 +76,13 @@ void renderDesign (float percent) {
   hangingStar(400, 420, 20, 40, 300, percent);
   hangingStar(700, 350, 20, 40, 250, -percent);
   
-  /*moon*/
+  moon();
+  
+  allGears(percent);
+}
+
+void moon() {
+   /*moon*/
   fill(179, 129, 132);
   rect(580, 120, 5, 200);
   rect(600, 120, 5, 200);
@@ -101,9 +107,9 @@ void renderDesign (float percent) {
   //translate(moonTranslate + changeMoon*2*frameCount,320);
   ellipse(0, 0, 70, 70);
   popMatrix();
-  
-  allGears(percent);
 }
+
+
 
 void allGears(float percent) {
   
