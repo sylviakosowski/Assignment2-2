@@ -9,12 +9,17 @@ int moonStep;
 
 class CloudParticle {
   
-  int x;
-  int y;
+  float x;
+  float y;
   int size;
   int c1;
   int c2;
   int c3;
+  float xRand;
+  float yRand;
+  float xOrig;
+  float yOrig;
+  int movement;
   
   CloudParticle(int x, int y, int size, int c1, int c2, int c3) {
     this.x = x;
@@ -23,6 +28,12 @@ class CloudParticle {
     this.c1 = c1;
     this.c2 = c2;
     this.c3 = c3;
+    this.xOrig = x;
+    this.yOrig = y;
+    
+    xRand = random(-20, 20);
+    yRand = random(-20, 20);
+    movement = 1;
   }
   
   public void draw() {
@@ -95,7 +106,7 @@ void setup() {
   moonTranslate = 540;
   moonStep = 2;
   
-  c1 = new Cloud(400, 500, 30, 60, 30, 1, 115, 98, 110);
+  c1 = new Cloud(400, 500, 1, 60, 30, 1, 115, 98, 110);
   
 }
 
@@ -155,6 +166,7 @@ void renderDesign (float percent) {
   rect(200,120,700,25);
   
   c1.draw();
+  animateCloud(c1, percent);
   
   hangingStar(150, 350, 20, 40, 220, -percent);
   hangingStar(400, 420, 20, 40, 300, percent);
@@ -162,26 +174,24 @@ void renderDesign (float percent) {
   
   moon();
   
-  //cloud(420, 500);
-  
   allGears(percent);
 }
 
-/*
-void cloud(int x, int y) {
-  int cloudSize = 10;
-  for(int i = 0; i < cloudSize; i++) {
-    //float r1 = random(0,50);
-    //float r2 = random(0,50);
-    int test = i*10;
-    fill(115 + test, 98 + test, 110 + test);
-    ellipse(x+r1, y+r2, 50, 50);
-    //ellipse(500 + test, 600 + test, 20, 20);
-  }
-}*/
-
-void animateCloud(Cloud c) {
+void animateCloud(Cloud c, float percent) {
   CloudParticle[] cp = c.particles;
+  
+  for(int i = 0; i < cp.length; i++) {
+    
+    float newPosX;
+    float newPosY;
+
+    newPosX = cp[i].xRand * percent;
+    newPosY = cp[i].yRand * percent;
+
+    
+    cp[i].x = cp[i].x + newPosX;
+    cp[i].y = cp[i].y + newPosY;
+  }
   
 }
 
