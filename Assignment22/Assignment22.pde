@@ -1,10 +1,48 @@
-
+int nFramesInLoop = 30; //Change to 10 for lenticular
+int nElapsedFrames;
+boolean bRecording;
 
 void setup() {
   size(800,800);
+  bRecording = false;
+  nElapsedFrames = 0;
+  frameRate (nFramesInLoop);
+}
+
+void keyPressed() {
+  //Press a key to export frames to the output folder
+  bRecording = true;
+  nElapsedFrames = 0;
 }
 
 void draw() {
+  
+  // Compute a percentage (0...1) representing where we are in the loop.
+  float percentCompleteFraction = 0; 
+  if (bRecording) {
+    percentCompleteFraction = (float) nElapsedFrames / (float)nFramesInLoop;
+  } 
+  else {
+    float modFrame = (float) (frameCount % nFramesInLoop);
+    percentCompleteFraction = modFrame / (float)nFramesInLoop;
+  }
+  
+  // Render the design, based on that percentage. 
+  renderDesign (percentCompleteFraction);
+ 
+  // If we're recording the output, save the frame to a file. 
+  if (bRecording) {
+    String  myName = "sylviakosowski"; 
+    saveFrame("output/"+ myName + "-loop-" + nf(nElapsedFrames, 4) + ".png");
+    nElapsedFrames++; 
+    if (nElapsedFrames == nFramesInLoop) {
+      bRecording = false;
+    }
+  }
+  
+}
+
+void renderDesign (float percent) {
   noStroke();
   background(65, 62, 74);
   
@@ -14,8 +52,6 @@ void draw() {
   rotate(frameCount / 200.0);
   star(0,0, 50, 70, 10);
   popMatrix();
-  
-  
 }
 
 /* Using star function from default examples */
