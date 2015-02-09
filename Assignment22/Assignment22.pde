@@ -1,9 +1,11 @@
-int nFramesInLoop = 30; //Change to 10 for lenticular
+int nFramesInLoop = 10; //Change to 10 for lenticular
 int nElapsedFrames;
 boolean bRecording;
 
 //The current frame we're on
 int currentFrame;
+int moonTranslate;
+int moonStep;
 
 void setup() {
   size(1000,1000);
@@ -11,6 +13,8 @@ void setup() {
   nElapsedFrames = 0;
   frameRate (nFramesInLoop);
   currentFrame = 0;
+  moonTranslate = 540;
+  moonStep = 2;
 }
 
 void keyPressed() {
@@ -20,6 +24,9 @@ void keyPressed() {
 }
 
 void draw() {
+  
+  pushMatrix();
+  //scale(1.5, 1.5); //used for rescaling the composition size
   
   // Compute a percentage (0...1) representing where we are in the loop.
   float percentCompleteFraction = 0; 
@@ -44,6 +51,8 @@ void draw() {
     }
   }
   
+  popMatrix();
+  
 }
 
 //Create the design
@@ -63,42 +72,72 @@ void renderDesign (float percent) {
   fill(115,98,110);
   rect(200,120,700,25);
   
-  hangingStar(150, 350, 20, 40, 220, -(float) nFramesInLoop);
-  hangingStar(400, 420, 20, 40, 300, (float) nFramesInLoop);
+  hangingStar(150, 350, 20, 40, 220, -percent);
+  hangingStar(400, 420, 20, 40, 300, percent);
+  hangingStar(700, 350, 20, 40, 250, -percent);
   
+  /*moon*/
+  fill(179, 129, 132);
+  rect(580, 120, 5, 200);
+  rect(600, 120, 5, 200);
   
-  /* center top darker purple gray gear */
-  gear(95, 78, 90, 220, 130, 60, 70, 15, 20, (float) nFramesInLoop);
+  fill(240, 180, 158);
+  ellipse(580, 320, 70, 70);
   
-  /*left top small pale purple really spikey jagged */
-  gear(115,98, 110, 300, 140, 40, 60, 20, 10, -(float) nFramesInLoop);
+  pushMatrix();
+  fill(65, 62, 74);
   
-  /*Lefttop large pink ultraspiky */
-  gear(179, 129, 132, 200, 200, 90, 100, 20, 40, -(float) nFramesInLoop);
+  if( moonTranslate > 550) {
+    moonStep *= -1;
+  }
   
-  /*Left top small spiky gear*/
-  gear(115, 98, 110, 150, 150, 50, 70, 10, 20, (float) nFramesInLoop);
+  if( moonTranslate < 540) {
+    moonStep *= -1;
+  }
+  moonTranslate += moonStep;
+  translate(moonTranslate + moonStep, 320);
   
-  /* center top darker purple gray gear */
-  gear(95, 78, 90, 400, 120, 60, 70, 15, 20, -(float) nFramesInLoop);
+ // print(changeMoon);
+  //translate(moonTranslate + changeMoon*2*frameCount,320);
+  ellipse(0, 0, 70, 70);
+  popMatrix();
   
-  /* light purple right behind large pink */
-  gear(115, 98, 110, 700, 120, 40, 60, 14, 20, (float) nFramesInLoop);
-  
-  /* right top bottom light pink */
-  gear(179,129,132, 820, 230, 50, 60, 10, 10, -(float) nFramesInLoop);
-  
-  /* right large pink */
-  gear(159, 109, 112, 800, 150, 100, 110, 20, 40, (float) nFramesInLoop);
-  
-  /* center dark pink */
-  gear(159, 109, 112, 600, 150, 50, 60, 12, 10, -(float) nFramesInLoop);
-  
-  /* right small pink 4 */
-  gear(179,129,132, 690, 150, 20, 60, 4, 10, -(float) nFramesInLoop);
-  
+  allGears(percent);
 }
 
+void allGears(float percent) {
+  
+   /* center top darker purple gray gear */
+  gear(95, 78, 90, 220, 130, 60, 70, 15, 20, percent);
+  
+  /*left top small pale purple really spikey jagged */
+  gear(115,98, 110, 300, 140, 40, 60, 20, 10, percent);
+  
+  /*Lefttop large pink ultraspiky */
+  gear(179, 129, 132, 200, 200, 90, 100, 20, 40, -percent);
+  
+  /*Left top small spiky gear*/
+  gear(115, 98, 110, 150, 150, 50, 70, 10, 20, percent);
+  
+  /* center top darker purple gray gear */
+  gear(95, 78, 90, 400, 120, 60, 70, 15, 20, -percent);
+  
+  /* light purple right behind large pink */
+  gear(115, 98, 110, 700, 120, 40, 60, 14, 20, percent);
+  
+  /* right top bottom light pink */
+  gear(179,129,132, 820, 230, 50, 60, 10, 10, -percent);
+  
+  /* right large pink */
+  gear(159, 109, 112, 800, 150, 100, 110, 20, 40, percent);
+  
+  /* center dark pink */
+  gear(159, 109, 112, 600, 150, 50, 60, 12, 10, -percent);
+  
+  /* right small pink 4 */
+  gear(179,129,132, 690, 150, 20, 60, 4, 10, -percent);
+  
+}
 
 void hangingStar(int x, int y, int r1, int r2, int stringLength, float rate) {
   
@@ -113,16 +152,17 @@ void gear(int c1, int c2, int c3, int x, int y, float radius1, float radius2, in
   int centerRadius, float rate) {
   pushMatrix();
   translate(x, y);
-  rotate(frameCount / rate);
+  //rotate(frameCount / rate);
+  rotate(rate * TWO_PI / nPoints );
   fill(c1,c2,c3);
-  star(0,0, radius1, radius2, nPoints);
+  star(0,0, radius1, radius2, nPoints, rate);
   fill(65,62,74);
   ellipse(0,0,centerRadius, centerRadius);
   popMatrix();
 }
 
 /* Using star function from default examples */
-void star(float x, float y, float radius1, float radius2, int npoints) {
+void star(float x, float y, float radius1, float radius2, int npoints, float percent) {
   float angle = TWO_PI / npoints;
   float halfAngle = angle/2.0;
   beginShape();
@@ -137,7 +177,7 @@ void star(float x, float y, float radius1, float radius2, int npoints) {
   endShape(CLOSE);
 }
 
-//Make a wheel, specifying color, radius, and number of 
+//Make a wheel, specifying color, radius, and number of spokes
 void wheel(int x, int y, int c1, int c2, int c3, int outerRadius, int innerRadius, 
   int spokeRadius, int numSpokes, float percent, int weight) {
   /*Wheel*/
@@ -152,12 +192,10 @@ void wheel(int x, int y, int c1, int c2, int c3, int outerRadius, int innerRadiu
     float armAngle = (percent + i) * (TWO_PI/numSpokes); 
     float px = x + radius*cos(armAngle); 
     float py = y + radius*sin(armAngle); 
-    //fill    (255); 
     stroke(c1,c2,c3);
     strokeWeight(weight);
     line    (x, y, px, py); 
     noStroke();
-    //ellipse (px, py, 20, 20);
   }
 }
 
