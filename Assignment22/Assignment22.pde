@@ -63,6 +63,10 @@ void renderDesign (float percent) {
   fill(115,98,110);
   rect(200,120,700,25);
   
+  hangingStar(150, 350, 20, 40, 220, -(float) nFramesInLoop);
+  hangingStar(400, 420, 20, 40, 300, (float) nFramesInLoop);
+  
+  
   /* center top darker purple gray gear */
   gear(95, 78, 90, 220, 130, 60, 70, 15, 20, (float) nFramesInLoop);
   
@@ -92,6 +96,16 @@ void renderDesign (float percent) {
   
   /* right small pink 4 */
   gear(179,129,132, 690, 150, 20, 60, 4, 10, -(float) nFramesInLoop);
+  
+}
+
+
+void hangingStar(int x, int y, int r1, int r2, int stringLength, float rate) {
+  
+  fill(179, 129, 132);
+  rect(x-10, 120, 5, stringLength);
+  rect(x+10, 120, 5, stringLength);
+  gear(247, 228, 190, x, y, r1, r2, 5, 0, rate);
   
 }
 
