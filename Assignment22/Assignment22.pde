@@ -4,8 +4,6 @@ boolean bRecording;
 
 //The current frame we're on
 int currentFrame;
-int moonTranslate;
-int moonStep;
 
 class CloudParticle {
   
@@ -40,7 +38,6 @@ class CloudParticle {
   }
   
 }
-
 
 class Cloud {
   
@@ -110,8 +107,6 @@ void setup() {
   nElapsedFrames = 0;
   frameRate (nFramesInLoop);
   currentFrame = 0;
-  moonTranslate = 540;
-  moonStep = 2;
   
   c1 = new Cloud(200, 500, 40, 60, 30, 1, 30, 60, 115, 98, 110);
   c2 = new Cloud(700, 500, 40, 175, 50, 1, 75, 100, 115, 98, 110);
@@ -211,9 +206,6 @@ void animateCloud(Cloud c, float percent) {
     if(frameCount%(nFramesInLoop/2) == 0) {
       cp[i].movement *= -1;
     }
-
-    //newPosX = cp[i].xRand * percent * cp[i].movement;
-    //newPosY = cp[i].yRand * percent * cp[i].movement;
     
     newPosX = cp[i].xRand * cp[i].movement;
     newPosY = cp[i].yRand * cp[i].movement;
@@ -237,37 +229,14 @@ void moon(float percent) {
   darkSideOfTheMoon.draw();
   
   float newPosX;
-  //float newPosY;
     
-    if(frameCount%(nFramesInLoop/2) == 0) {
-      darkSideOfTheMoon.movement *= -1;
-    }
-
-    newPosX = darkSideOfTheMoon.movement;
-    //newPosY = cp[i].yRand * percent * cp[i].movement;
-
-    darkSideOfTheMoon.x = darkSideOfTheMoon.x + newPosX;
-    //cp[i].x = cp[i].x + newPosX;
-    //cp[i].y = cp[i].y + newPosY;
-
-  //pushMatrix();
-  //fill(65, 62, 74);
-  
-  /*
-  if( moonTranslate > 550) {
-    moonStep *= -1;
+  if(frameCount%(nFramesInLoop/2) == 0) {
+     darkSideOfTheMoon.movement *= -1;
   }
-  
-  if( moonTranslate < 540) {
-    moonStep *= -1;
-  }
-  moonTranslate += moonStep;
-  translate(moonTranslate + moonStep * percent, 320);
-  //translate(moonTranslate, 320);
-  
-  */
-  //ellipse(0, 0, 90, 90);
-  //popMatrix();
+
+  newPosX = darkSideOfTheMoon.movement;
+
+  darkSideOfTheMoon.x = darkSideOfTheMoon.x + newPosX;
 }
 
 
