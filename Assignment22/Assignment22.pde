@@ -53,7 +53,7 @@ class Cloud {
   int c2;
   int c3;
   
-  Cloud(int centerX, int centerY, int numParticles, int xOffset, int yOffset, int force,
+  Cloud(int centerX, int centerY, int numParticles, int xOffset, int yOffset, int force, int s1, int s2,
     int c1, int c2, int c3) {
     this.centerX = centerX;
     this.centerY = centerY;
@@ -70,7 +70,7 @@ class Cloud {
     for(int i = 0; i < numParticles; i ++) {
       int xPos = (int)random(centerX - xOffset, centerX + xOffset);
       int yPos = (int)random(centerY - yOffset, centerY + yOffset);
-      int size = (int)random(30,60);
+      int size = (int)random(s1,s2);
       
       int newc1 = c1 + i * 5;
       int newc2 = c2 + i * 5;
@@ -83,6 +83,10 @@ class Cloud {
   }
   
   public void draw() {
+    fill(115, 98, 110);
+    rect(centerX-10, 120, 5, centerY - 120);
+    rect(centerX+10, 120, 5, centerY - 120);
+    
     for(int i = 0; i < numParticles; i++) {
       particles[i].draw();
     }
@@ -91,6 +95,9 @@ class Cloud {
 }
 
 Cloud c1;
+Cloud c2;
+Cloud c3;
+Cloud c4;
 
 
 void setup() {
@@ -102,7 +109,10 @@ void setup() {
   moonTranslate = 540;
   moonStep = 2;
   
-  c1 = new Cloud(200, 500, 40, 60, 30, 1, 115, 98, 110);
+  c1 = new Cloud(200, 500, 40, 60, 30, 1, 30, 60, 115, 98, 110);
+  c2 = new Cloud(700, 500, 40, 175, 50, 1, 75, 100, 115, 98, 110);
+  c3 = new Cloud(500, 800, 40, 200, 50, 1, 90, 120, 65, 62, 74);
+  c4 = new Cloud(300, 600, 20, 80, 30, 1, 40, 70, 240, 180, 158);
   
 }
 
@@ -161,8 +171,14 @@ void renderDesign (float percent) {
   fill(115,98,110);
   rect(200,120,700,25);
   
+  c3.draw();
+  animateCloud(c3, percent);
   c1.draw();
   animateCloud(c1, percent);
+  c2.draw();
+  animateCloud(c2, percent);
+  c4.draw();
+  animateCloud(c4, percent);
   
   hangingStar(150, 350, 20, 40, 220, -percent);
   hangingStar(400, 420, 20, 40, 300, percent);
