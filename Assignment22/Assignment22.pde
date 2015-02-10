@@ -18,14 +18,16 @@ class CloudParticle {
   float xRand;
   float yRand;
   int movement;
+  int alpha;
   
-  CloudParticle(int x, int y, int size, int c1, int c2, int c3) {
+  CloudParticle(int x, int y, int size, int c1, int c2, int c3, int alpha) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.c1 = c1;
     this.c2 = c2;
     this.c3 = c3;
+    this.alpha = alpha;
     
     xRand = random(-1, 1);
     yRand = random(-1, 1);
@@ -33,7 +35,7 @@ class CloudParticle {
   }
   
   public void draw() {
-    fill(c1, c2, c3, 200);
+    fill(c1, c2, c3, alpha);
     ellipse(x, y, size, size);
   }
   
@@ -76,7 +78,7 @@ class Cloud {
       int newc2 = c2 + i * 5;
       int newc3 = c3 + i * 5;
       
-      CloudParticle cp = new CloudParticle(xPos, yPos, size, newc1, newc2, newc3);
+      CloudParticle cp = new CloudParticle(xPos, yPos, size, newc1, newc2, newc3, 200);
       particles[i] = cp;
     }
     
@@ -98,6 +100,8 @@ Cloud c1;
 Cloud c2;
 Cloud c3;
 Cloud c4;
+Cloud c5;
+CloudParticle darkSideOfTheMoon;
 
 
 void setup() {
@@ -113,6 +117,8 @@ void setup() {
   c2 = new Cloud(700, 500, 40, 175, 50, 1, 75, 100, 115, 98, 110);
   c3 = new Cloud(500, 800, 40, 200, 50, 1, 90, 120, 65, 62, 74);
   c4 = new Cloud(300, 600, 20, 80, 30, 1, 40, 70, 240, 180, 158);
+  c5 = new Cloud(720, 680, 30, 140, 50, 1, 70, 90, 240, 180, 158);
+  darkSideOfTheMoon = new CloudParticle(580, 320, 100, 65, 62, 74, 255);
   
 }
 
@@ -126,6 +132,7 @@ void draw() {
   
   pushMatrix();
   //scale(1.5, 1.5); //used for rescaling the composition size
+  translate(0, 20);
   
   // Compute a percentage (0...1) representing where we are in the loop.
   float percentCompleteFraction = 0; 
@@ -171,8 +178,12 @@ void renderDesign (float percent) {
   fill(115,98,110);
   rect(200,120,700,25);
   
+  hangingStar(190, 750, 20, 40, 620, percent);
+  
   c3.draw();
   animateCloud(c3, percent);
+  c5.draw();
+  animateCloud(c5, percent);
   c1.draw();
   animateCloud(c1, percent);
   c2.draw();
@@ -182,9 +193,9 @@ void renderDesign (float percent) {
   
   hangingStar(150, 350, 20, 40, 220, -percent);
   hangingStar(400, 420, 20, 40, 300, percent);
-  hangingStar(700, 350, 20, 40, 250, -percent);
+  hangingStar(800, 350, 20, 40, 240, -percent);
   
-  moon();
+  moon(percent);
   
   allGears(percent);
 }
@@ -197,12 +208,15 @@ void animateCloud(Cloud c, float percent) {
     float newPosX;
     float newPosY;
     
-    if(frameCount%nFramesInLoop == 0) {
+    if(frameCount%(nFramesInLoop/2) == 0) {
       cp[i].movement *= -1;
     }
 
-    newPosX = cp[i].xRand * percent * cp[i].movement;
-    newPosY = cp[i].yRand * percent * cp[i].movement;
+    //newPosX = cp[i].xRand * percent * cp[i].movement;
+    //newPosY = cp[i].yRand * percent * cp[i].movement;
+    
+    newPosX = cp[i].xRand * cp[i].movement;
+    newPosY = cp[i].yRand * cp[i].movement;
 
     
     cp[i].x = cp[i].x + newPosX;
@@ -211,18 +225,35 @@ void animateCloud(Cloud c, float percent) {
   
 }
 
-void moon() {
+void moon(float percent) {
    /*moon*/
   fill(179, 129, 132);
-  rect(580, 120, 5, 200);
-  rect(600, 120, 5, 200);
+  rect(620, 120, 5, 200);
+  rect(640, 120, 5, 200);
   
   fill(240, 180, 158);
-  ellipse(580, 320, 90, 90);
+  ellipse(620, 320, 100, 100);
   
-  pushMatrix();
-  fill(65, 62, 74);
+  darkSideOfTheMoon.draw();
   
+  float newPosX;
+  //float newPosY;
+    
+    if(frameCount%(nFramesInLoop/2) == 0) {
+      darkSideOfTheMoon.movement *= -1;
+    }
+
+    newPosX = darkSideOfTheMoon.movement;
+    //newPosY = cp[i].yRand * percent * cp[i].movement;
+
+    darkSideOfTheMoon.x = darkSideOfTheMoon.x + newPosX;
+    //cp[i].x = cp[i].x + newPosX;
+    //cp[i].y = cp[i].y + newPosY;
+
+  //pushMatrix();
+  //fill(65, 62, 74);
+  
+  /*
   if( moonTranslate > 550) {
     moonStep *= -1;
   }
@@ -231,12 +262,12 @@ void moon() {
     moonStep *= -1;
   }
   moonTranslate += moonStep;
-  translate(moonTranslate + moonStep, 320);
+  translate(moonTranslate + moonStep * percent, 320);
+  //translate(moonTranslate, 320);
   
- // print(changeMoon);
-  //translate(moonTranslate + changeMoon*2*frameCount,320);
-  ellipse(0, 0, 90, 90);
-  popMatrix();
+  */
+  //ellipse(0, 0, 90, 90);
+  //popMatrix();
 }
 
 
